@@ -19,7 +19,7 @@ local function lsp_keymaps(bufnr)
   keymap(bufnr, "n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
 end
 
-M.on_attach = function(client, bufnr)
+M.on_attach = function(client, bufnr) 
   lsp_keymaps(bufnr)
 
   if client.supports_method "textDocument/inlayHint" then
@@ -66,12 +66,15 @@ function M.config()
 
   local servers = {
     "lua_ls",
+    "clangd",
     "cssls",
     "html",
-    "ts_ls",
+--    "ts_ls",
     "eslint",
-    "ts_ls",
-    "pyright",
+    "tsserver",
+--    "jedi_language_server",
+    "pylsp",
+--    "pyright",
     "bashls",
     "jsonls",
     "yamlls",
@@ -122,11 +125,54 @@ function M.config()
       opts = vim.tbl_deep_extend("force", settings, opts)
     end
 
-    if server == "lua_ls" then
-      require("neodev").setup {}
-    end
+    if server == "clangd" then
+      local cmp_nvim_lsp = require "cmp_nvim_lsp"
 
-    lspconfig[server].setup(opts)
+      require("lspconfig").clangd.setup {
+        on_attach = M.on_attach,
+        capabilities = cmp_nvim_lsp.default_capabilities(),
+        cmd = {
+          "clangd",
+          "--offset-encoding=utf-16",
+        },
+      }
+    elseif server == "lua_ls" then
+      require("neodev").setup {}
+      lspconfig[server].setup(opts)
+    elseif server == "pylsp" then
+      require("lspconfig").pylsp.setup {
+        on_attach = M.on_attach,
+        capabilities = M.common_capabilities(),
+        settings = {
+          pylsp = {
+            plugins = {
+                -- formatter options
+                black = { enabled = false },
+                autopep8 = { enabled = false },
+                yapf = { enabled = false },
+                -- linter options
+                pylint = { enabled = false, executable = "pylint" },
+                pyflakes = { enabled = true },
+                pycodestyle = { enabled = false },
+                -- type checker
+                pylsp_mypy = { enabled = true },
+                -- auto-completion options
+                jedi_completion = { fuzzy = true },
+                -- import sorting
+                pyls_isort = { enabled = true },
+                -- hover options
+                jedi_hover = { enabled = true },
+            },
+          },
+        },
+        flags = {
+            debounce_text_changes = 200,
+        },
+      }
+    else
+--      require(server).setup {}
+      lspconfig[server].setup(opts)
+    end
   end
 end
 

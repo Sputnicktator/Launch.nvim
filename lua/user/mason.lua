@@ -8,12 +8,16 @@ local M = {
 function M.config()
   local servers = {
     "lua_ls",
+    "clangd",
     "cssls",
     "html",
-    "ts_ls",
-    "pyright",
+    "tsserver",
+--    "jedi_language_server",
+    "pylsp",
+--    "pyright",
     "bashls",
     "jsonls",
+    "yamlls",
   }
 
   require("mason").setup {

@@ -2,7 +2,8 @@ local M = {
   "nvimtools/none-ls.nvim",
   dependencies = {
     "nvim-lua/plenary.nvim",
-  },
+    "nvimtools/none-ls-extras.nvim",
+  }
 }
 
 function M.config()
@@ -14,6 +15,7 @@ function M.config()
   null_ls.setup {
     debug = false,
     sources = {
+      -- require("none-ls.diagnostics.flake8"),
       formatting.stylua,
       formatting.prettier,
       formatting.black,
@@ -22,7 +24,7 @@ function M.config()
       --   -- extra_args = { "--no-semi", "--single-quote", "--jsx-single-quote" },
       -- },
       -- formatting.eslint,
-      null_ls.builtins.diagnostics.flake8,
+      -- null_ls.builtins.diagnostics.flake8,
       -- diagnostics.flake8,
       null_ls.builtins.completion.spell,
     },

@@ -75,7 +75,7 @@ function M.config()
       },
       -- Accept currently selected item. If none selected, `select` first item.
       -- Set `select` to `false` to only confirm explicitly selected items.
-      ["<CR>"] = cmp.mapping.confirm { select = true },
+      ["<CR>"] = cmp.mapping.confirm { select = false },
       ["<Tab>"] = cmp.mapping(function(fallback)
         if cmp.visible() then
           cmp.select_next_item()
@@ -117,13 +117,7 @@ function M.config()
           luasnip = "",
           buffer = "",
           path = "",
-          emoji = "",
         })[entry.source.name]
-
-        if entry.source.name == "emoji" then
-          vim_item.kind = icons.misc.Smiley
-          vim_item.kind_hl_group = "CmpItemKindEmoji"
-        end
 
         if entry.source.name == "cmp_tabnine" then
           vim_item.kind = icons.misc.Robot
@@ -135,14 +129,13 @@ function M.config()
     },
     sources = {
       { name = "copilot" },
-      { name = "nvim_lsp" },
+      --- { name = "nvim_lsp" },
       { name = "luasnip" },
       { name = "cmp_tabnine" },
       { name = "nvim_lua" },
       { name = "buffer" },
       { name = "path" },
       { name = "calc" },
-      { name = "emoji" },
     },
     confirm_opts = {
       behavior = cmp.ConfirmBehavior.Replace,
@@ -157,6 +150,9 @@ function M.config()
         border = "rounded",
       },
     },
+    ---completion = {
+    ---  autocomplete =false,
+    ---},
     experimental = {
       ghost_text = false,
     },
