@@ -145,6 +145,7 @@ function M.config()
         capabilities = M.common_capabilities(),
         settings = {
           pylsp = {
+            configurationSources = {"flake8"},
             plugins = {
                 -- formatter options
                 black = { enabled = false },
@@ -157,7 +158,7 @@ function M.config()
                 -- type checker
                 pylsp_mypy = { enabled = true },
                 -- auto-completion options
-                jedi_completion = { fuzzy = true },
+                jedi_completion = { fuzzy = true }, -- include_params = true }
                 -- import sorting
                 pyls_isort = { enabled = true },
                 -- hover options

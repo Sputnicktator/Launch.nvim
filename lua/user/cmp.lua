@@ -7,6 +7,10 @@ local M = {
       event = "InsertEnter",
     },
     {
+      "hrsh7th/cmp-nvim-lsp-signature-help",
+      event = "InsertEnter",
+    },
+    {
       "hrsh7th/cmp-emoji",
       event = "InsertEnter",
     },
@@ -41,7 +45,7 @@ local M = {
 
 function M.config()
   local cmp = require "cmp"
-  local luasnip = require "luasnip"
+  local luasnip = require "luasnip" --.filetype_extend("python", {"python-snippets"})
   require("luasnip/loaders/from_vscode").lazy_load()
 
   vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
@@ -62,10 +66,10 @@ function M.config()
       end,
     },
     mapping = cmp.mapping.preset.insert {
-      ["<C-k>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
-      ["<C-j>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-      ["<Down>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
-      ["<Up>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
+      ["<C-k>"] = cmp.mapping(cmp.mapping.select_next_item(), { "i", "c" }),
+      ["<C-j>"] = cmp.mapping(cmp.mapping.select_prev_item(), { "i", "c" }),
+      ["<Down>"] = cmp.mapping(function(fallback) cmp.close() fallback() end, { "i" }),
+      ["<Up>"] = cmp.mapping(function(fallback) cmp.close() fallback() end, { "i" }),
       ["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-1), { "i", "c" }),
       ["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(1), { "i", "c" }),
       ["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
@@ -129,7 +133,8 @@ function M.config()
     },
     sources = {
       { name = "copilot" },
-      --- { name = "nvim_lsp" },
+      { name = "nvim_lsp" },
+      { name = "nvim_lsp_signature_help" },
       { name = "luasnip" },
       { name = "cmp_tabnine" },
       { name = "nvim_lua" },
@@ -150,9 +155,10 @@ function M.config()
         border = "rounded",
       },
     },
-    ---completion = {
-    ---  autocomplete =false,
-    ---},
+    completion = {
+      completeopt='menu,menuone,noinsert,popup'
+      --autocomplete =false,
+    },
     experimental = {
       ghost_text = false,
     },
