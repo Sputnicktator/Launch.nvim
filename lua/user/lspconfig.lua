@@ -22,9 +22,9 @@ end
 M.on_attach = function(client, bufnr) 
   lsp_keymaps(bufnr)
 
-  if client.supports_method "textDocument/inlayHint" then
-    vim.lsp.inlay_hint.enable(true, { bufnr })
-  end
+  --if client.supports_method "textDocument/inlayHint" then
+  --  vim.lsp.inlay_hint.enable(true, { bufnr })
+  --end
 end
 
 function M.common_capabilities()
