@@ -135,6 +135,7 @@ function M.config()
           "clangd",
           "--offset-encoding=utf-16",
         },
+        filetypes = {"c", "hpp", "cpp", "tpp", "objc", "objcpp", "cuda", "proto"},
       }
     elseif server == "lua_ls" then
       require("neodev").setup {}
