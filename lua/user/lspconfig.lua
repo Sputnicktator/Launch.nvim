@@ -69,9 +69,9 @@ function M.config()
     "clangd",
     "cssls",
     "html",
---    "ts_ls",
+    "ts_ls",
     "eslint",
-    "tsserver",
+--    "tsserver",
 --    "jedi_language_server",
     "pylsp",
 --    "pyright",
@@ -106,9 +106,9 @@ function M.config()
 
   vim.diagnostic.config(default_diagnostic_config)
 
-  for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config(), "signs", "values") or {}) do
-    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
-  end
+--  for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config(), "signs", "values") or {}) do
+--    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
+--  end
 
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
   vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
@@ -128,7 +128,7 @@ function M.config()
     if server == "clangd" then
       local cmp_nvim_lsp = require "cmp_nvim_lsp"
 
-      require("lspconfig").clangd.setup {
+      vim.lsp.config('clangd', {
         on_attach = M.on_attach,
         capabilities = cmp_nvim_lsp.default_capabilities(),
         cmd = {
@@ -136,12 +136,12 @@ function M.config()
           "--offset-encoding=utf-16",
         },
         filetypes = {"c", "hpp", "cpp", "tpp", "objc", "objcpp", "cuda", "proto"},
-      }
+      })
     elseif server == "lua_ls" then
       require("neodev").setup {}
-      lspconfig[server].setup(opts)
+      vim.lsp.config(server,opts)--setup(opts)
     elseif server == "pylsp" then
-      require("lspconfig").pylsp.setup {
+      vim.lsp.config('pylsp', {
         on_attach = M.on_attach,
         capabilities = M.common_capabilities(),
         settings = {
@@ -170,10 +170,11 @@ function M.config()
         flags = {
             debounce_text_changes = 200,
         },
-      }
+      })
     else
 --      require(server).setup {}
-      lspconfig[server].setup(opts)
+--      lspconfig[server].setup(opts)
+      vim.lsp.config(server,opts)
     end
   end
 end

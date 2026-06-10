@@ -9,9 +9,10 @@ function M.config()
   local servers = {
     "lua_ls",
     "clangd",
-    "cssls",
+--    "cssls",
     "html",
-    "tsserver",
+    "ts_ls",
+--    "tsserver",
 --    "jedi_language_server",
     "pylsp",
 --    "pyright",
