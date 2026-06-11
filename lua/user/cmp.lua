@@ -152,7 +152,7 @@ function M.config()
       },
     },
     completion = {
-      completeopt = "menu,menuone,noinsert,popup",
+      completeopt = "menu,menuone,noinsert,popup,noselect",
     },
     experimental = {
       ghost_text = false,
