@@ -19,12 +19,8 @@ local function lsp_keymaps(bufnr)
   keymap(bufnr, "n", "gl", "<cmd>lua vim.diagnostic.open_float()<CR>", opts)
 end
 
-M.on_attach = function(client, bufnr) 
+M.on_attach = function(client, bufnr)
   lsp_keymaps(bufnr)
-
-  --if client.supports_method "textDocument/inlayHint" then
-  --  vim.lsp.inlay_hint.enable(true, { bufnr })
-  --end
 end
 
 function M.common_capabilities()
@@ -71,10 +67,7 @@ function M.config()
     "html",
     "ts_ls",
     "eslint",
---    "tsserver",
---    "jedi_language_server",
     "pylsp",
---    "pyright",
     "bashls",
     "jsonls",
     "yamlls",
@@ -106,76 +99,52 @@ function M.config()
 
   vim.diagnostic.config(default_diagnostic_config)
 
---  for _, sign in ipairs(vim.tbl_get(vim.diagnostic.config(), "signs", "values") or {}) do
---    vim.fn.sign_define(sign.name, { texthl = sign.name, text = sign.text, numhl = sign.name })
---  end
-
   vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
   vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
   require("lspconfig.ui.windows").default_options.border = "rounded"
 
-  for _, server in pairs(servers) do
-    local opts = {
-      on_attach = M.on_attach,
-      capabilities = M.common_capabilities(),
-    }
+  vim.lsp.config("*", {
+    on_attach = M.on_attach,
+    capabilities = M.common_capabilities(),
+  })
 
+  vim.lsp.config("clangd", {
+    capabilities = require("cmp_nvim_lsp").default_capabilities(),
+    cmd = { "clangd", "--offset-encoding=utf-16" },
+    filetypes = { "c", "hpp", "cpp", "tpp", "objc", "objcpp", "cuda", "proto" },
+  })
+
+  vim.lsp.config("pylsp", {
+    settings = {
+      pylsp = {
+        configurationSources = { "flake8" },
+        plugins = {
+          black = { enabled = false },
+          autopep8 = { enabled = false },
+          yapf = { enabled = false },
+          pylint = { enabled = false, executable = "pylint" },
+          pyflakes = { enabled = true },
+          pycodestyle = { enabled = false },
+          pylsp_mypy = { enabled = true },
+          jedi_completion = { fuzzy = true },
+          pyls_isort = { enabled = true },
+          jedi_hover = { enabled = true },
+        },
+      },
+    },
+    flags = {
+      debounce_text_changes = 200,
+    },
+  })
+
+  require("neodev").setup {}
+
+  for _, server in pairs(servers) do
     local require_ok, settings = pcall(require, "user.lspsettings." .. server)
     if require_ok then
-      opts = vim.tbl_deep_extend("force", settings, opts)
+      vim.lsp.config(server, settings)
     end
-
-    if server == "clangd" then
-      local cmp_nvim_lsp = require "cmp_nvim_lsp"
-
-      vim.lsp.config('clangd', {
-        on_attach = M.on_attach,
-        capabilities = cmp_nvim_lsp.default_capabilities(),
-        cmd = {
-          "clangd",
-          "--offset-encoding=utf-16",
-        },
-        filetypes = {"c", "hpp", "cpp", "tpp", "objc", "objcpp", "cuda", "proto"},
-      })
-    elseif server == "lua_ls" then
-      require("neodev").setup {}
-      vim.lsp.config(server,opts)--setup(opts)
-    elseif server == "pylsp" then
-      vim.lsp.config('pylsp', {
-        on_attach = M.on_attach,
-        capabilities = M.common_capabilities(),
-        settings = {
-          pylsp = {
-            configurationSources = {"flake8"},
-            plugins = {
-                -- formatter options
-                black = { enabled = false },
-                autopep8 = { enabled = false },
-                yapf = { enabled = false },
-                -- linter options
-                pylint = { enabled = false, executable = "pylint" },
-                pyflakes = { enabled = true },
-                pycodestyle = { enabled = false },
-                -- type checker
-                pylsp_mypy = { enabled = true },
-                -- auto-completion options
-                jedi_completion = { fuzzy = true }, -- include_params = true }
-                -- import sorting
-                pyls_isort = { enabled = true },
-                -- hover options
-                jedi_hover = { enabled = true },
-            },
-          },
-        },
-        flags = {
-            debounce_text_changes = 200,
-        },
-      })
-    else
---      require(server).setup {}
---      lspconfig[server].setup(opts)
-      vim.lsp.config(server,opts)
-    end
+    vim.lsp.enable(server)
   end
 end
 

@@ -5,7 +5,9 @@ local M = {
     bind = true,
     hi_parameter = "IncSearch",
   },
-  config = function(_, opts) require'lsp_signature'.setup(opts) end
+  config = function(_, opts)
+    require("lsp_signature").setup(opts)
+  end,
 }
 
 return M

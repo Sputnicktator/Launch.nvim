@@ -11,10 +11,6 @@ local M = {
       event = "InsertEnter",
     },
     {
-      "hrsh7th/cmp-emoji",
-      event = "InsertEnter",
-    },
-    {
       "hrsh7th/cmp-buffer",
       event = "InsertEnter",
     },
@@ -45,7 +41,7 @@ local M = {
 
 function M.config()
   local cmp = require "cmp"
-  local luasnip = require "luasnip" --.filetype_extend("python", {"python-snippets"})
+  local luasnip = require "luasnip"
   require("luasnip/loaders/from_vscode").lazy_load()
 
   vim.api.nvim_set_hl(0, "CmpItemKindCopilot", { fg = "#6CC644" })
@@ -156,8 +152,7 @@ function M.config()
       },
     },
     completion = {
-      completeopt='menu,menuone,noinsert,popup'
-      --autocomplete =false,
+      completeopt = "menu,menuone,noinsert,popup",
     },
     experimental = {
       ghost_text = false,

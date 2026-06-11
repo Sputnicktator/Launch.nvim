@@ -1,11 +1,11 @@
 local M = {
   "GeorgesAlkhouri/nvim-aider",
+  event = "VeryLazy",
 }
 
 function M.config()
   require("nvim_aider").setup {
-  -- Command that executes Aider
-  aider_cmd = "aider --model gpt-4.1",
+    aider_cmd = "aider --model gpt-4.1",
   }
 end
 
