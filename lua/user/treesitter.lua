@@ -1,12 +1,11 @@
 local M = {
   "nvim-treesitter/nvim-treesitter",
-  branch = "master",
   event = { "BufReadPost", "BufNewFile" },
   build = ":TSUpdate",
 }
 
 function M.config()
-  require("nvim-treesitter.configs").setup {
+  require("nvim-treesitter.config").setup {
     ensure_installed = { "lua", "markdown", "markdown_inline", "bash", "python" },
     highlight = {
       enable = true,
