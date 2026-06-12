@@ -17,10 +17,7 @@ function M.config()
     scope_chdir = "global",
   }
 
-  local opts = { noremap = true, silent = true }
-  local keymap = vim.api.nvim_set_keymap
-
-  keymap("n", "<c-p>", ":lua require('telescope').extensions.projects.projects()<CR>", opts)
+  vim.keymap.set("n", "<c-p>", ":lua require('telescope').extensions.projects.projects()<CR>", { noremap = true, silent = true })
 end
 
 return M

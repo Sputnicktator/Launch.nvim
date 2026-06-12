@@ -111,12 +111,12 @@ function M.config()
     end,
   })
 
-  local opts = { noremap = true, silent = true }
   function _G.set_terminal_keymaps()
-    vim.api.nvim_buf_set_keymap(0, "t", "<m-h>", [[<C-\><C-n><C-W>h]], opts)
-    vim.api.nvim_buf_set_keymap(0, "t", "<m-j>", [[<C-\><C-n><C-W>j]], opts)
-    vim.api.nvim_buf_set_keymap(0, "t", "<m-k>", [[<C-\><C-n><C-W>k]], opts)
-    vim.api.nvim_buf_set_keymap(0, "t", "<m-l>", [[<C-\><C-n><C-W>l]], opts)
+    local opts = { noremap = true, silent = true, buffer = 0 }
+    vim.keymap.set("t", "<m-h>", [[<C-\><C-n><C-W>h]], opts)
+    vim.keymap.set("t", "<m-j>", [[<C-\><C-n><C-W>j]], opts)
+    vim.keymap.set("t", "<m-k>", [[<C-\><C-n><C-W>k]], opts)
+    vim.keymap.set("t", "<m-l>", [[<C-\><C-n><C-W>l]], opts)
   end
 end
 
